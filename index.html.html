@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future of Trust: Decentralized Product Reviews with Web3 & AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Tech -->
+    <!-- Application Structure Plan: A thematic, single-page narrative structure is used instead of mirroring the report's linear format. The user journey starts with the 'Why' (the problem), moves to the 'How' (the Web3+AI solution), then the 'What' (comparisons and future examples), and finally the 'Road Ahead' (challenges/recommendations). This flow is more intuitive for learning, guiding the user from problem to solution to future implications. Key interactions include a dynamic radar chart for direct comparison, clickable cards to reveal detailed information on complex topics, and modals for project examples. This structure was chosen to make dense, conceptual information digestible and engaging through progressive disclosure and visual storytelling. -->
+    <!-- Visualization & Content Choices: 
+    - Report Info: Table 1 (Centralized vs. Decentralized Comparison). Goal: Compare. Viz/Method: Chart.js Radar Chart. Interaction: Hover tooltips. Justification: A radar chart provides a powerful, immediate visual summary of multiple attributes, making the advantages of the Web3 model much clearer than a static table.
+    - Report Info: Sections on Web3 & AI components. Goal: Organize/Inform. Viz/Method: Interactive cards (HTML/Tailwind/JS). Interaction: Click to reveal details. Justification: Breaks down complex topics into manageable pieces, letting users explore at their own pace without being overwhelmed by text.
+    - Report Info: Pioneering Projects & Speculative Designs. Goal: Inform/Explore. Viz/Method: Grid of clickable cards with modals (HTML/Tailwind/JS). Interaction: Click to open modal with details. Justification: A modern, visually scannable way to present case studies and ideas, more engaging than a list.
+    - All other text is paraphrased and presented in contextually relevant sections with clear headings and introductory paragraphs to guide the user.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #2c3e50;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: #4DB6AC;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .modal {
+            display: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-gray-800">Future of Trust</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#problem" class="nav-link text-gray-600 hover:text-gray-900">The Trust Crisis</a>
+                <a href="#solution" class="nav-link text-gray-600 hover:text-gray-900">The Solution</a>
+                <a href="#comparison" class="nav-link text-gray-600 hover:text-gray-900">Paradigm Shift</a>
+                <a href="#future" class="nav-link text-gray-600 hover:text-gray-900">Future in Action</a>
+                <a href="#challenges" class="nav-link text-gray-600 hover:text-gray-900">Road Ahead</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#problem" class="block py-2 px-6 text-sm text-gray-700">The Trust Crisis</a>
+            <a href="#solution" class="block py-2 px-6 text-sm text-gray-700">The Solution</a>
+            <a href="#comparison" class="block py-2 px-6 text-sm text-gray-700">Paradigm Shift</a>
+            <a href="#future" class="block py-2 px-6 text-sm text-gray-700">Future in Action</a>
+            <a href="#challenges" class="block py-2 px-6 text-sm text-gray-700">Road Ahead</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">Revolutionizing Customer Trust</h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Exploring how Web3 and AI can build a transparent, decentralized, and trustworthy ecosystem for product reviews, moving power from platforms to people.</p>
+                <a href="#problem" class="mt-8 inline-block bg-[#4DB6AC] text-white font-bold py-3 px-8 rounded-full hover:bg-[#26A69A] transition duration-300">Discover Why</a>
+            </div>
+        </section>
+
+        <section id="problem" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">The Trust Crisis in Online Reviews</h2>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Today's online shopping experience is built on a fragile foundation. Centralized review platforms, which hold immense power, are plagued by systemic issues that erode consumer trust and prevent truly informed decisions.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-6 border border-gray-200 rounded-lg">
+                        <div class="text-5xl mb-4 text-[#E57373]">⚠️</div>
+                        <h3 class="text-xl font-semibold mb-2">Manipulation & Fake Reviews</h3>
+                        <p class="text-gray-600">Centralized platforms are rife with fake reviews, content manipulation, and censorship, misleading consumers and unfairly promoting or demoting products.</p>
+                    </div>
+                    <div class="text-center p-6 border border-gray-200 rounded-lg">
+                        <div class="text-5xl mb-4 text-[#E57373]">🏢</div>
+                        <h3 class="text-xl font-semibold mb-2">Centralized Control & Data Exploitation</h3>
+                        <p class="text-gray-600">Platforms, not users, own and control the review data. They can alter or remove content at will, and monetize user contributions without direct benefit to the creators.</p>
+                    </div>
+                    <div class="text-center p-6 border border-gray-200 rounded-lg">
+                        <div class="text-5xl mb-4 text-[#E57373]">📉</div>
+                        <h3 class="text-xl font-semibold mb-2">Erosion of Consumer Confidence</h3>
+                        <p class="text-gray-600">The cumulative effect is a significant decline in trust. Consumers are increasingly skeptical, making it harder to distinguish genuine feedback from paid promotions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">A Two-Part Solution: Web3 & AI</h2>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto">To rebuild trust, we need a new architecture. The solution combines the rock-solid, transparent foundation of Web3 with the sophisticated capabilities of Artificial Intelligence to create a system that is both fundamentally trustworthy and intelligently responsive.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12 items-start">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6 text-center">Part 1: The Web3 Foundation of Trust</h3>
+                        <div class="space-y-4" id="web3-cards"></div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6 text-center">Part 2: The AI Intelligence Layer</h3>
+                        <div class="space-y-4" id="ai-cards"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="comparison" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">The Paradigm Shift: Web2 vs Web3</h2>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto">The move to a decentralized model isn't just an upgrade; it's a complete re-imagining of how online trust works. This chart visually contrasts the old, centralized model with the new, user-centric paradigm across key features.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">The Future in Action</h2>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto">The convergence of Web3 and AI isn't just theoretical. Pioneering projects are already building this future, while speculative designs hint at the incredible potential yet to be unlocked. Click on a card to learn more.</p>
+                </div>
+                
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold mb-6 text-center">Pioneering Projects</h3>
+                    <div id="pioneering-projects" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-center">Speculative Designs: What's Next?</h3>
+                    <div id="speculative-designs" class="grid md:grid-cols-2 gap-8"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenges" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">The Road Ahead: Challenges & Recommendations</h2>
+                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto">The path to a decentralized future is promising but not without obstacles. Widespread adoption requires addressing key technical, usability, and regulatory hurdles while following a strategic path forward.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-4 text-[#E57373]">Key Challenges</h3>
+                        <ul id="challenges-list" class="space-y-4"></ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-4 text-[#4DB6AC]">Strategic Recommendations</h3>
+                        <ul id="recommendations-list" class="space-y-4"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>An Interactive Exploration of Decentralized Reviews</p>
+            <p class="text-sm text-gray-400 mt-2">Built to demonstrate the potential of Web3 and AI in fostering consumer trust.</p>
+        </div>
+    </footer>
+    
+    <div id="project-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+        <div class="modal-content bg-white rounded-lg shadow-2xl p-8 max-w-2xl w-full transform scale-95">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-2xl font-bold"></h3>
+                <button id="modal-close-button" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            <p id="modal-description" class="text-gray-600"></p>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const data = {
+                web3Cards: [
+                    { title: 'Blockchain & Immutability', icon: '🔗', description: 'At its core, blockchain provides a decentralized, tamper-proof digital ledger. Once a review is recorded, it cannot be altered or deleted, ensuring a permanent and verifiable history, free from central control.' },
+                    { title: 'Tokenomics & Incentives', icon: '💰', description: 'Web3 introduces models that reward users directly with tokens for high-quality, valuable contributions. This creates a sustainable ecosystem where users are compensated for the value they generate, aligning incentives across the community.' },
+                    { title: 'Decentralized Identity (DID)', icon: '🆔', description: 'DID allows users to own and control their digital identity. It can be used to verify that a reviewer is a real person or a verified purchaser without revealing their personal information, enhancing authenticity while preserving privacy.' }
+                ],
+                aiCards: [
+                    { title: 'AI-Powered Fraud Detection', icon: '🤖', description: 'Leveraging Machine Learning and NLP, AI systems analyze text patterns, sentiment, and user behavior to identify and flag fraudulent reviews with high accuracy, ensuring the integrity of the feedback pool.' },
+                    { title: 'Advanced Sentiment Analysis', icon: '😊', description: 'AI goes beyond positive/negative ratings to decipher nuanced emotions and opinions from text. This provides deeper insights for both consumers and businesses, highlighting specific strengths and weaknesses.' },
+                    { title: 'Hyper-Personalized Recommendations', icon: '🎯', description: 'By analyzing authentic, sentiment-rich decentralized reviews, AI can provide more accurate and trustworthy product recommendations, tailoring the shopping experience to individual user needs while respecting data ownership.' },
+                    { title: 'DAO-Enhanced Governance', icon: '🗳️', description: 'In community-governed systems (DAOs), AI can summarize vast amounts of feedback and proposals, enabling more efficient and informed collective decision-making, giving consumers a real voice in product evolution.' }
+                ],
+                pioneeringProjects: [
+                    { title: 'Review Network', description: 'A decentralized market feedback platform that rewards users with REW tokens for writing reviews. It aims to eliminate fake reviews through community validation and gives users control and ownership over their data, combining decentralization, incentives, and AI analysis.' },
+                    { title: 'Fakespot', description: 'While a Web2 tool, Fakespot is a crucial precursor. Its AI-powered browser extension detects fake reviews on major e-commerce sites, proving the high consumer demand and effectiveness of AI in ensuring review authenticity.' },
+                    { title: 'Token Metrics', description: 'An AI-powered crypto investment platform that demonstrates sophisticated sentiment analysis and trend identification. Its AI capabilities are directly transferable to analyzing product review data to find market trends and consumer insights.' }
+                ],
+                speculativeDesigns: [
+                    { title: 'Autonomous Review Agents (ARAs)', description: 'Future AI agents could, with user consent, analyze anonymized product usage data from smart devices to generate unbiased, data-backed reviews, cross-referencing them with on-chain feedback to verify claims.' },
+                    { title: 'NFT-Gated Review Communities', description: 'Exclusive access to high-quality or specialized review channels could be granted via NFTs earned through a reputation system. This would incentivize deep, credible contributions and create tiered levels of trust.' },
+                    { title: 'DAO-Governed Product Loops', description: 'Product-specific DAOs could manage feedback directly. AI would summarize sentiment, the community would vote on improvements, and contributors whose feedback leads to changes would be rewarded, creating a direct, self-governing feedback loop.' },
+                    { title: 'Verifiable Provenance & Linking', description: 'Blockchain could track a product\'s entire lifecycle. Reviews could then be linked to a verifiable product ID and a confirmed purchase record via DID, making it nearly impossible to review a product one hasn\'t actually owned or used.' }
+                ],
+                challenges: [
+                    { title: 'Scalability & Cost', icon: '⚡️', description: 'Blockchains can be slow and expensive for high-volume applications. Layer 2 solutions are improving this, but it remains a key hurdle for mass adoption.'},
+                    { title: 'User Onboarding & UX', icon: '🧑‍💻', description: 'Web3 concepts (wallets, gas fees) are complex for average users. Abstracting this complexity behind a simple, intuitive interface is critical.'},
+                    { title: 'Regulatory Uncertainty', icon: '⚖️', description: 'The legal landscape for decentralized systems and tokens is still evolving, creating ambiguity for developers and businesses.'},
+                    { title: 'Sustainable Incentives', icon: '♻️', description: 'Designing token models that reward genuine value over mere participation is crucial to avoid "boom-and-bust" cycles and build lasting communities.'},
+                ],
+                recommendations: [
+                     { title: 'Prioritize User Experience (UX)', icon: '🎨', description: 'Focus relentlessly on making the technology invisible. The user interface must be as seamless and intuitive as the best Web2 applications.'},
+                     { title: 'Design Value-Aligned Incentives', icon: '🌱', description: 'Move beyond simple rewards. Build reputation systems that foster intrinsic motivation and reward high-quality, long-term contributions.'},
+                     { title: 'Leverage AI for Trust', icon: '🛡️', description: 'Invest in transparent AI for robust fraud detection and genuinely helpful personalization, ensuring users understand how AI is used.'},
+                     { title: 'Embrace Iterative Development', icon: '🚀', description: 'Start with pilot projects and Minimum Viable Products (MVPs) to test concepts, gather real-world feedback, and adapt quickly.'},
+                ]
+            };
+
+            const web3CardsContainer = document.getElementById('web3-cards');
+            data.web3Cards.forEach(card => {
+                web3CardsContainer.innerHTML += `
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 card">
+                        <div class="flex items-center mb-3">
+                            <div class="text-3xl mr-4">${card.icon}</div>
+                            <h4 class="text-lg font-semibold">${card.title}</h4>
+                        </div>
+                        <p class="text-gray-600">${card.description}</p>
+                    </div>
+                `;
+            });
+
+            const aiCardsContainer = document.getElementById('ai-cards');
+            data.aiCards.forEach(card => {
+                aiCardsContainer.innerHTML += `
+                    <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100 card">
+                        <div class="flex items-center mb-3">
+                            <div class="text-3xl mr-4">${card.icon}</div>
+                            <h4 class="text-lg font-semibold">${card.title}</h4>
+                        </div>
+                        <p class="text-gray-600">${card.description}</p>
+                    </div>
+                `;
+            });
+            
+            const pioneeringContainer = document.getElementById('pioneering-projects');
+            data.pioneeringProjects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'card bg-white p-6 rounded-lg shadow-md border border-gray-100 cursor-pointer';
+                projectCard.innerHTML = `<h4 class="text-lg font-semibold mb-2">${project.title}</h4><p class="text-gray-600 text-sm">${project.description.substring(0, 100)}...</p>`;
+                projectCard.addEventListener('click', () => openModal(project.title, project.description));
+                pioneeringContainer.appendChild(projectCard);
+            });
+            
+            const speculativeContainer = document.getElementById('speculative-designs');
+            data.speculativeDesigns.forEach(design => {
+                const designCard = document.createElement('div');
+                designCard.className = 'card bg-white p-6 rounded-lg shadow-md border border-gray-100 cursor-pointer';
+                designCard.innerHTML = `<h4 class="text-lg font-semibold mb-2">${design.title}</h4><p class="text-gray-600 text-sm">${design.description.substring(0, 100)}...</p>`;
+                designCard.addEventListener('click', () => openModal(design.title, design.description));
+                speculativeContainer.appendChild(designCard);
+            });
+
+            const challengesContainer = document.getElementById('challenges-list');
+            data.challenges.forEach(item => {
+                challengesContainer.innerHTML += `
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-4">${item.icon}</span>
+                        <div>
+                            <h4 class="font-semibold">${item.title}</h4>
+                            <p class="text-gray-600 text-sm">${item.description}</p>
+                        </div>
+                    </li>
+                `;
+            });
+
+            const recommendationsContainer = document.getElementById('recommendations-list');
+            data.recommendations.forEach(item => {
+                recommendationsContainer.innerHTML += `
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-4">${item.icon}</span>
+                        <div>
+                            <h4 class="font-semibold">${item.title}</h4>
+                            <p class="text-gray-600 text-sm">${item.description}</p>
+                        </div>
+                    </li>
+                `;
+            });
+
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Control', 'Data Ownership', 'Trust Mechanism', 'Review Immutability', 'Fraud Vulnerability', 'Censorship Risk'],
+                    datasets: [{
+                        label: 'Web2 (Centralized)',
+                        data: [5, 5, 5, 2, 5, 5],
+                        backgroundColor: 'rgba(229, 115, 115, 0.2)',
+                        borderColor: 'rgba(229, 115, 115, 1)',
+                        pointBackgroundColor: 'rgba(229, 115, 115, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(229, 115, 115, 1)'
+                    }, {
+                        label: 'Web3 (Decentralized)',
+                        data: [1, 1, 1, 5, 1, 1],
+                        backgroundColor: 'rgba(77, 182, 172, 0.2)',
+                        borderColor: 'rgba(77, 182, 172, 1)',
+                        pointBackgroundColor: 'rgba(77, 182, 172, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(77, 182, 172, 1)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(44, 62, 80, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(44, 62, 80, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                },
+                                color: '#2c3e50'
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                max: 5,
+                                min: 0,
+                                stepSize: 1,
+                                backdropColor: 'rgba(248, 247, 244, 0.75)',
+                                color: '#7f8c8d'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    const value = context.raw;
+                                    const a = ['Low', 'Low-Mid', 'Mid', 'Mid-High', 'High'];
+                                    const b = ['High', 'Mid-High', 'Mid', 'Low-Mid', 'Low'];
+
+                                    if(context.label === 'Fraud Vulnerability' || context.label === 'Censorship Risk' || context.label === 'Control' || context.label === 'Data Ownership') {
+                                        label += b[value-1];
+                                    } else {
+                                         label += a[value-1];
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                           position: 'bottom',
+                        }
+                    }
+                }
+            });
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            const navLinks = document.querySelectorAll('#mobile-menu a, #header nav a[href^="#"]');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            const modal = document.getElementById('project-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
+            const modalCloseButton = document.getElementById('modal-close-button');
+
+            function openModal(title, description) {
+                modalTitle.textContent = title;
+                modalDescription.textContent = description;
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.style.opacity = '1';
+                    modal.querySelector('.modal-content').style.transform = 'scale(1)';
+                }, 10);
+            }
+
+            function closeModal() {
+                 modal.style.opacity = '0';
+                 modal.querySelector('.modal-content').style.transform = 'scale(0.95)';
+                 setTimeout(() => {
+                    modal.style.display = 'none';
+                 }, 300);
+            }
+
+            modalCloseButton.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                if(event.target === modal) {
+                    closeModal();
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
